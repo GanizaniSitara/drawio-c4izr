@@ -1,0 +1,40 @@
+<mxfile host="Electron" modified="2024-06-07T12:17:52.843Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.7.5 Chrome/114.0.5735.289 Electron/25.8.1 Safari/537.36" etag="zVsij9sEGNWt1dpBNR2h" version="21.7.5" type="device">
+  <diagram name="Page-1" id="c8LgE2vqiPGjq0eHUCk_">
+    <mxGraphModel dx="1418" dy="948" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="MXxEXB5ajVTIcHnTvGKl-4" value="Conn A-B" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MXxEXB5ajVTIcHnTvGKl-2" target="MXxEXB5ajVTIcHnTvGKl-3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MXxEXB5ajVTIcHnTvGKl-2" value="System A" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="280" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MXxEXB5ajVTIcHnTvGKl-6" value="Conn B-C" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MXxEXB5ajVTIcHnTvGKl-3" target="MXxEXB5ajVTIcHnTvGKl-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MXxEXB5ajVTIcHnTvGKl-8" value="Conn B-D" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MXxEXB5ajVTIcHnTvGKl-3" target="MXxEXB5ajVTIcHnTvGKl-7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MXxEXB5ajVTIcHnTvGKl-3" value="System B" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="480" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MXxEXB5ajVTIcHnTvGKl-10" value="Conn C-A" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="MXxEXB5ajVTIcHnTvGKl-5" target="MXxEXB5ajVTIcHnTvGKl-2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="740" y="160" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="740" y="160" />
+              <mxPoint x="340" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MXxEXB5ajVTIcHnTvGKl-5" value="System C" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="680" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MXxEXB5ajVTIcHnTvGKl-7" value="System D" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="480" y="380" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
