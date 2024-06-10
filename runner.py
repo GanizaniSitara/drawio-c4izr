@@ -58,9 +58,17 @@ def do_process(file):
 DRAWIO_EXECUTABLE_PATH = "C:\\Program Files\\draw.io\\draw.io.exe"
 DRAWIO_EXISTING_DIAGRAMS_DIR = 'C:\\Solutions\\Python\\AllConcepts\\drawio_github'
 
+def ask_user_to_translate():
+    response = input("Do you want to translate the file to C4? (yes/no, default is yes): ").strip().lower()
+    return response in ('', 'yes', 'y')
+
+
 def process_file(file_path):
     process = subprocess.Popen([DRAWIO_EXECUTABLE_PATH, file_path])
     process.wait()
+
+    if not ask_user_to_translate():
+        return
 
     output_xml = do_process(file_path)
     data = drawio_serialization.encode_diagram_data(output_xml)
