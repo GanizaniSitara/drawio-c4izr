@@ -9,6 +9,7 @@ import subprocess
 import lxml.etree as etree
 import drawio_serialization
 import xml.etree.ElementTree as ET
+import drawio_utils
 
 class XMLParseException(Exception):
     # TODO not sure what he exact intent was with this ...
@@ -52,27 +53,29 @@ def do_process(file):
     # print(pretty_output_xml)
     return output_xml
 
+
+
+DRAWIO_EXECUTABLE_PATH = "C:\\Program Files\\draw.io\\draw.io.exe"
+DRAWIO_EXISTING_DIAGRAMS_DIR = 'C:\\Solutions\\Python\\AllConcepts\\drawio_github'
+
+def process_file(file_path):
+    process = subprocess.Popen([DRAWIO_EXECUTABLE_PATH, file_path])
+    process.wait()
+
+    output_xml = do_process(file_path)
+    data = drawio_serialization.encode_diagram_data(output_xml)
+    drawio_utils.write_drawio_output(data, "output.drawio")
+
+    process = subprocess.Popen([DRAWIO_EXECUTABLE_PATH, 'output.drawio'])
+    process.wait()
+
+def process_directory(directory_path):
+    for root, _, files in os.walk(directory_path):
+        for filename in files:
+            file_path = os.path.join(root, filename)
+            if os.path.isfile(file_path):
+                process_file(file_path)
+
 if __name__ == "__main__":
-
-
-    directory_path = 'C:\\Solutions\\Python\\AllConcepts\\drawio_github'
-
-    for filename in os.listdir(directory_path):
-        file_path = os.path.join(directory_path, filename)
-        if os.path.isfile(file_path):
-
-            import os
-            import drawio_serialization, drawio_utils
-
-            DRAWIO_EXECUTABLE_PATH = "C:\\Program Files\\draw.io\\draw.io.exe"
-
-            process = subprocess.Popen([f'{DRAWIO_EXECUTABLE_PATH}', f'{file_path}'])
-
-            output_xml = do_process(file_path)
-            data = drawio_serialization.encode_diagram_data(output_xml)
-            drawio_utils.write_drawio_output(data, "output.drawio")
-
-            process = subprocess.Popen([f'{DRAWIO_EXECUTABLE_PATH}', f'output.drawio'])
-            process.wait()
-
+    process_directory(DRAWIO_EXISTING_DIAGRAMS_DIR)
 
