@@ -1,112 +1,185 @@
-
-from c4izr import c4izr
-
-input_xml = '''
-<mxGraphModel dx="1418" dy="948" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
-  <root>
-    <mxCell id="0" />
-    <mxCell id="1" parent="0" />
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-1" value="" style="triangle;whiteSpace=wrap;html=1;rotation=-90;fillColor=#f5f5f5;fontColor=#333333;strokeColor=none;" parent="1" vertex="1">
-      <mxGeometry x="220" y="60" width="40" height="80" as="geometry" />
-    </mxCell>
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-2" value="Project-Specific" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
-      <mxGeometry x="180" y="120" width="120" height="20" as="geometry" />
-    </mxCell>
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-3" value="Org-Specific" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
-      <mxGeometry x="160" y="140" width="160" height="20" as="geometry" />
-    </mxCell>
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-4" value="Sectors-Specific" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=40;verticalAlign=top;" parent="1" vertex="1">
-      <mxGeometry x="120" y="160" width="240" height="40" as="geometry" />
-    </mxCell>
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-5" value="System Baseline" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
-      <mxGeometry x="100" y="200" width="280" height="20" as="geometry" />
-    </mxCell>
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-6" value="leveraging &amp;amp;&lt;br&gt;superceding&lt;br&gt;if/as required" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=0;" parent="1" edge="1">
-      <mxGeometry width="50" height="50" relative="1" as="geometry">
-        <mxPoint x="90" y="130" as="sourcePoint" />
-        <mxPoint x="90" y="210" as="targetPoint" />
-      </mxGeometry>
-    </mxCell>
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-7" value="" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;dashed=1;fillColor=none;" parent="1" vertex="1">
-      <mxGeometry x="120" y="180" width="240" height="20" as="geometry" />
-    </mxCell>
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-8" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" edge="1">
-      <mxGeometry width="50" height="50" relative="1" as="geometry">
-        <mxPoint x="200" y="200" as="sourcePoint" />
-        <mxPoint x="200" y="180" as="targetPoint" />
-      </mxGeometry>
-    </mxCell>
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-9" value="Education" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;dashed=1;fontStyle=2;fontSize=10;" parent="1" vertex="1">
-      <mxGeometry x="130" y="180" width="60" height="20" as="geometry" />
-    </mxCell>
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-10" value="Government" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;dashed=1;fontStyle=2;fontSize=10;" parent="1" vertex="1">
-      <mxGeometry x="210" y="180" width="60" height="20" as="geometry" />
-    </mxCell>
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-11" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" edge="1">
-      <mxGeometry width="50" height="50" relative="1" as="geometry">
-        <mxPoint x="280" y="200" as="sourcePoint" />
-        <mxPoint x="280" y="180" as="targetPoint" />
-      </mxGeometry>
-    </mxCell>
-    <mxCell id="Gn2PjE0u4oeQyPnQltGL-12" value="Other" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;dashed=1;fontStyle=2;fontSize=10;" parent="1" vertex="1">
-      <mxGeometry x="280" y="180" width="60" height="20" as="geometry" />
-    </mxCell>
-  </root>
-</mxGraphModel>
-'''
-
-input_xml2 = '''
-<mxGraphModel dx="1418" dy="948" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
-  <root>
-    <mxCell id="0" />
-    <mxCell id="1" parent="0" />
-    <mxCell id="MXxEXB5ajVTIcHnTvGKl-4" value="Conn A-B" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="MXxEXB5ajVTIcHnTvGKl-2" target="MXxEXB5ajVTIcHnTvGKl-3">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <mxCell id="MXxEXB5ajVTIcHnTvGKl-2" value="System A" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-      <mxGeometry x="280" y="240" width="120" height="60" as="geometry" />
-    </mxCell>
-    <mxCell id="MXxEXB5ajVTIcHnTvGKl-6" value="Conn B-C" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="MXxEXB5ajVTIcHnTvGKl-3" target="MXxEXB5ajVTIcHnTvGKl-5">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <mxCell id="MXxEXB5ajVTIcHnTvGKl-8" value="Conn B-D" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="MXxEXB5ajVTIcHnTvGKl-3" target="MXxEXB5ajVTIcHnTvGKl-7">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <mxCell id="MXxEXB5ajVTIcHnTvGKl-3" value="System B" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-      <mxGeometry x="480" y="240" width="120" height="60" as="geometry" />
-    </mxCell>
-    <mxCell id="MXxEXB5ajVTIcHnTvGKl-10" value="Conn C-A" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="MXxEXB5ajVTIcHnTvGKl-5" target="MXxEXB5ajVTIcHnTvGKl-2">
-      <mxGeometry relative="1" as="geometry">
-        <mxPoint x="740" y="160" as="targetPoint" />
-        <Array as="points">
-          <mxPoint x="740" y="160" />
-          <mxPoint x="340" y="160" />
-        </Array>
-      </mxGeometry>
-    </mxCell>
-    <mxCell id="MXxEXB5ajVTIcHnTvGKl-5" value="System C" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-      <mxGeometry x="680" y="240" width="120" height="60" as="geometry" />
-    </mxCell>
-    <mxCell id="MXxEXB5ajVTIcHnTvGKl-7" value="System D" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-      <mxGeometry x="480" y="380" width="120" height="60" as="geometry" />
-    </mxCell>
-  </root>
-</mxGraphModel>
-'''
-
-if __name__ == "__main__":
-
-    translator = c4izr()
-    output_xml = translator.translate(input_xml)
-    print(output_xml)
-
-    import subprocess
-    import drawio_serialization, drawio_utils
-
-    DRAWIO_EXECUTABLE_PATH = "C:\\Program Files\\draw.io\\draw.io.exe"
-
-    data = drawio_serialization.encode_diagram_data(output_xml)
-    drawio_utils.write_drawio_output(data, "output.drawio")
-
-    process = subprocess.Popen([f'{DRAWIO_EXECUTABLE_PATH}', f'output.drawio'])
-    process.wait()
+#!/usr/bin/env python3
+"""
+C4izr main entry point - Converts draw.io diagrams to C4 model format.
+"""
+
+import argparse
+import os
+import sys
+import subprocess
+import logging
+from pathlib import Path
+
+from c4izr import c4izr
+import drawio_serialization
+import drawio_utils
+
+# Configure logging
+logger = logging.getLogger('c4izr')
+handler = logging.StreamHandler(sys.stdout)
+formatter = logging.Formatter('%(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
+
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Convert draw.io diagrams to standard C4 representation."
+    )
+    parser.add_argument(
+        "input",
+        help="Path to a .drawio file or directory containing .drawio files"
+    )
+    parser.add_argument(
+        "-o", "--output",
+        help="Output filename (for single file) or directory (for multiple files)",
+        default="output.drawio"
+    )
+    parser.add_argument(
+        "-s", "--scaling-factor",
+        type=float,
+        help="Scaling factor for diagram elements (default: 1.4)",
+        default=1.4
+    )
+    parser.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Run in non-interactive mode (auto-selects first system)"
+    )
+    parser.add_argument(
+        "--drawio-path",
+        help="Path to the draw.io executable",
+        default="C:\\Program Files\\draw.io\\draw.io.exe"
+    )
+    parser.add_argument(
+        "--open-output",
+        action="store_true",
+        help="Open the output file(s) in draw.io after conversion"
+    )
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Enable verbose output"
+    )
+    
+    return parser.parse_args()
+
+def process_file(file_path, output_path, args):
+    """Process a single DrawIO file."""
+    try:
+        if args.verbose:
+            logger.info(f"Processing: {file_path}")
+        
+        # Read input file
+        try:
+            from lxml import etree
+            tree = etree.parse(file_path)
+            diagrams = tree.findall('.//diagram')
+            
+            if len(diagrams) > 1 and args.verbose:
+                logger.info(f"Multiple diagrams found in {file_path}. Converting only the first.")
+            
+            if not diagrams:
+                logger.error(f"No diagrams found in {file_path}")
+                return False
+                
+            xml_data = diagrams[0]
+            if hasattr(xml_data, 'text') and xml_data.text and not xml_data.text.isspace():
+                xml_string = drawio_serialization.decode_diagram_data(xml_data.text)
+            else:
+                xml_data = xml_data.find('.//mxGraphModel')
+                if xml_data is None:
+                    logger.error(f"No mxGraphModel found in file: {file_path}")
+                    return False
+                xml_string = etree.tostring(xml_data, encoding='utf-8').decode('utf-8')
+        except Exception as e:
+            logger.error(f"Error reading file {file_path}: {str(e)}")
+            return False
+        
+        # Create translator with settings from args
+        translator = c4izr(scaling_factor=args.scaling_factor)
+        translator.interactive = not args.non_interactive
+        
+        # Translate the diagram
+        output_xml = translator.translate(xml_string)
+        
+        # Write output
+        try:
+            data = drawio_serialization.encode_diagram_data(output_xml)
+            drawio_utils.write_drawio_output(data, output_path)
+            logger.info(f"Conversion successful. Output written to {output_path}")
+        except Exception as e:
+            logger.error(f"Error writing output to {output_path}: {str(e)}")
+            return False
+        
+        # Open output file if requested
+        if args.open_output and os.path.exists(args.drawio_path):
+            try:
+                subprocess.Popen([args.drawio_path, output_path])
+            except Exception as e:
+                logger.error(f"Error opening file in draw.io: {str(e)}")
+                
+        return True
+    except Exception as e:
+        logger.error(f"Error processing {file_path}: {str(e)}")
+        return False
+
+def process_directory(dir_path, output_dir, args):
+    """Process all .drawio files in a directory."""
+    success_count = 0
+    failure_count = 0
+    
+    # Ensure output directory exists
+    os.makedirs(output_dir, exist_ok=True)
+    
+    for root, _, files in os.walk(dir_path):
+        for filename in files:
+            if filename.lower().endswith('.drawio'):
+                file_path = os.path.join(root, filename)
+                # Generate output path, preserving directory structure
+                rel_path = os.path.relpath(file_path, dir_path)
+                output_path = os.path.join(output_dir, f"c4_{rel_path}")
+                
+                # Ensure output directory exists
+                output_file_dir = os.path.dirname(output_path)
+                os.makedirs(output_file_dir, exist_ok=True)
+                
+                if process_file(file_path, output_path, args):
+                    success_count += 1
+                else:
+                    failure_count += 1
+    
+    if args.verbose:
+        logger.info(f"\nProcessing complete: {success_count} files converted successfully, {failure_count} failures")
+    
+    return success_count > 0
+
+def main():
+    """Main entry point for the program."""
+    # Parse command line arguments
+    args = parse_arguments()
+    
+    # Set verbose logging if requested
+    if args.verbose:
+        logger.setLevel(logging.DEBUG)
+    
+    # Validate input path
+    input_path = Path(args.input)
+    if not input_path.exists():
+        logger.error(f"Error: Input path '{args.input}' does not exist.")
+        return 1
+    
+    # Process file or directory
+    if input_path.is_file():
+        output_path = args.output
+        return 0 if process_file(input_path, output_path, args) else 1
+    elif input_path.is_dir():
+        output_dir = args.output if os.path.isdir(args.output) else "c4_output"
+        return 0 if process_directory(input_path, output_dir, args) else 1
+    else:
+        logger.error(f"Error: Input path '{args.input}' is neither a file nor a directory.")
+        return 1
+
+if __name__ == "__main__":
+    sys.exit(main())
