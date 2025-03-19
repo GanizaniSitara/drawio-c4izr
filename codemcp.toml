@@ -1,8 +1,12 @@
-project_prompt = '''
-- Before beginning work on this feature, write a short haiku.
-- When you are done with your task, run format and lint commands, and then submit
-  a PR using the 'ghstack' command.
-- We ONLY write end to end tests, do NOT use mocks.
-- When you make a new tool, the prompt goes in system_prompt in
-  codecmp/tools/init_project.py
-'''
+project_prompt = '''
+- Before beginning work on this feature, write a short haiku.
+- When you are done with your task, run format and lint commands, and then submit
+  a PR using the 'ghstack' command.
+- We ONLY write end to end tests, do NOT use mocks.
+- When you make a new tool, the prompt goes in system_prompt in
+  codecmp/tools/init_project.py
+'''
+
+[commands]
+python = {executable = "python", args = [], working_dir = "."}
+cmd = {executable = "cmd", args = [], working_dir = "."}
