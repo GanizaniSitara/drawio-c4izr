@@ -78,6 +78,7 @@ def ask_user_to_translate():
 
 
 def process_file(file_path):
+    print("Instructions: The original drawio file will be opened for review. Please review the file and close it when done.")
     process = subprocess.Popen([DRAWIO_EXECUTABLE_PATH, file_path])
     process.wait()
 
@@ -100,4 +101,3 @@ def process_directory(directory_path):
 
 if __name__ == "__main__":
     process_directory(DRAWIO_EXISTING_DIAGRAMS_DIR)
-
