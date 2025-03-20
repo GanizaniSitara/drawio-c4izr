@@ -154,11 +154,19 @@ class c4izr:
         for mxcell in input_root.findall('.//mxCell[@edge="1"]'):
             self._process_edge(mxcell, new_root)
 
-        # Add any remaining cells from the input
-        for mxcell in input_root.findall('./mxCell'):
-            new_root.append(mxcell)
-
         return ET.tostring(output_root, encoding='unicode', method='xml')
+
+    def translate_multiple(self, input_xml_list):
+        """
+        Translate multiple draw.io XML strings to C4 format.
+        
+        Args:
+            input_xml_list (list): List of XML strings from draw.io
+            
+        Returns:
+            list: List of translated XML strings in C4 format
+        """
+        return [self.translate(input_xml) for input_xml in input_xml_list]
 
 
 

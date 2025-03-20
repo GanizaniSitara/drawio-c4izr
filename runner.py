@@ -20,12 +20,26 @@ def drawio_xml(xml_file):
     try:
         tree = etree.parse(xml_file)
         diagrams = tree.findall('.//diagram')
-        # TODO need to decide how to handle multiple diagrams in a single file
-        # feels like we should inform the user that there are multiple diagrams
-        # and then still iterate, perhaps giving choice of the diagram page to process
-        if len (diagrams) > 1:
-            print(f"WARN - Multiple diagrams found in file: {xml_file}. Converting only the first.")
-        xml_data = diagrams[0]
+        if len(diagrams) > 1:
+            print(f"WARN - Multiple diagrams found in file: {xml_file}.")
+            for i, diagram in enumerate(diagrams):
+                print(f"{i + 1}: {diagram.get('name', 'Unnamed Diagram')}")
+            choice = input("Enter the number of the diagram to convert (or 'all' to process all): ").strip().lower()
+            if choice == 'all':
+                return [ET.tostring(diagram.find('.//mxGraphModel'), encoding='utf-8').decode('utf-8') for diagram in diagrams]
+            else:
+                try:
+                    index = int(choice) - 1
+                    if 0 <= index < len(diagrams):
+                        xml_data = diagrams[index]
+                    else:
+                        print("Invalid choice. Defaulting to the first diagram.")
+                        xml_data = diagrams[0]
+                except ValueError:
+                    print("Invalid input. Defaulting to the first diagram.")
+                    xml_data = diagrams[0]
+        else:
+            xml_data = diagrams[0]
 
         # NOTE!!
         # sometimes the "plain xml" files create with drawio desktop will still have the text
