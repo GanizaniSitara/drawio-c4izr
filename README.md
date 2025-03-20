@@ -22,6 +22,21 @@ c4izr converts draw.io diagrams to common C4 representation and standardizes exi
 
 ## How to Use
 
-1. Pass a single file or directory as an argument.
-2. Follow the interactive prompts or use non-interactive mode via command-line options.
-3. Adjust scaling, logging, and output settings using provided CLI options.
+Use c4izr by providing a single .drawio file or a directory containing multiple diagrams, for example:
+
+```cmd
+python main.py path\to\diagram.drawio
+python main.py path\to\directory\
+```
+
+If you prefer non-interactive mode, specify the flag:
+
+```cmd
+python main.py path\to\diagram.drawio --non-interactive
+```
+
+You can also adjust scaling, logging, and output settings. For example:
+
+```cmd
+python main.py path\to\diagram.drawio --scaling-factor=1.6 --verbose
+```
