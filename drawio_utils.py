@@ -7,16 +7,14 @@ import xml.dom.minidom
 def id_generator(size=22, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase + '-_'):
     return ''.join(random.choice(chars) for _ in range(size))
 
-@staticmethod
-def create_layer(self, name):
+def create_layer(name, locked=0):
     mxcell = etree.Element('mxCell')
-    mxcell.set('id', id_generator_2())
+    mxcell.set('id', id_generator())
     mxcell.set('value', name)
-    mxcell.set('style', 'locked=0')
+    mxcell.set('style', 'locked=' + str(locked))
     mxcell.set('parent', '0')
     return mxcell
 
-@staticmethod
 def get_diagram_root():
     mxGraphModel = etree.Element('mxGraphModel')
     mxGraphModel.set('dx', '981')
