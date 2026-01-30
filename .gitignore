@@ -163,4 +163,8 @@ cython_debug/
 *.dtmp
 *.bkp
 
+# Test output files
+test_output.drawio
+output.drawio
+
 .aider*
