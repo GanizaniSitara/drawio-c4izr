@@ -1,7 +1,9 @@
 import os
+import shutil
+import platform
 ##
 #
-# NOTE WE'RE USING the GPT Version at the moment not the c4izr.
+# NOTE: This is a legacy runner script. Consider using main.py instead.
 #
 ##
 from c4izr import c4izr
@@ -11,14 +13,38 @@ import drawio_serialization
 import xml.etree.ElementTree as ET
 import drawio_utils
 
+
 class XMLParseException(Exception):
-    # TODO not sure what he exact intent was with this ...
+    """Exception raised when XML parsing fails."""
     pass
+
+
+def get_drawio_executable_path():
+    """Get the draw.io executable path for the current platform."""
+    # First try to find it in PATH
+    drawio_path = shutil.which("draw.io") or shutil.which("drawio")
+    if drawio_path:
+        return drawio_path
+
+    # Fall back to platform-specific default locations
+    if platform.system() == "Windows":
+        return r"C:\Program Files\draw.io\draw.io.exe"
+    elif platform.system() == "Darwin":
+        return "/Applications/draw.io.app/Contents/MacOS/draw.io"
+    else:  # Linux and others
+        return "/usr/bin/drawio"
 
 
 def drawio_xml(xml_file):
     try:
-        tree = etree.parse(xml_file)
+        # Create a secure XML parser that prevents XXE attacks
+        parser = etree.XMLParser(
+            resolve_entities=False,  # Disable entity resolution
+            no_network=True,         # Disable network access
+            dtd_validation=False,    # Disable DTD validation
+            load_dtd=False           # Don't load external DTDs
+        )
+        tree = etree.parse(xml_file, parser)
         diagrams = tree.findall('.//diagram')
         if len(diagrams) > 1:
             print(f"WARN - Multiple diagrams found in file: {xml_file}.")
@@ -69,8 +95,10 @@ def do_process(file):
 
 
 
-DRAWIO_EXECUTABLE_PATH = "C:\\Program Files\\draw.io\\draw.io.exe"
-DRAWIO_EXISTING_DIAGRAMS_DIR = 'C:\\Solutions\\Python\\AllConcepts\\drawio_github'
+# Use platform-independent path detection
+DRAWIO_EXECUTABLE_PATH = get_drawio_executable_path()
+DRAWIO_EXISTING_DIAGRAMS_DIR = os.environ.get('DRAWIO_DIAGRAMS_DIR', os.path.expanduser('~/drawio_diagrams'))
+
 
 def ask_user_to_translate():
     response = input("Do you want to translate the file to C4? (yes/no, default is yes): ").strip().lower()
@@ -78,19 +106,40 @@ def ask_user_to_translate():
 
 
 def process_file(file_path):
-    print("Instructions: The original drawio file will be opened for review. Please review the file and close it when done.")
-    process = subprocess.Popen([DRAWIO_EXECUTABLE_PATH, file_path])
-    process.wait()
+    """Process a single drawio file."""
+    drawio_path = get_drawio_executable_path()
+
+    if not os.path.isfile(drawio_path):
+        print(f"Warning: draw.io executable not found at {drawio_path}")
+        print("Skipping file preview. Set the path in DRAWIO_EXECUTABLE_PATH environment variable.")
+    else:
+        print("Instructions: The original drawio file will be opened for review. Please review the file and close it when done.")
+        try:
+            process = subprocess.Popen([drawio_path, file_path])
+            process.wait()
+        except FileNotFoundError:
+            print(f"Error: Could not find draw.io executable at {drawio_path}")
+        except PermissionError:
+            print(f"Error: Permission denied to execute {drawio_path}")
 
     if not ask_user_to_translate():
         return
 
-    output_xml = do_process(file_path)
-    data = drawio_serialization.encode_diagram_data(output_xml)
-    drawio_utils.write_drawio_output(data, "output.drawio")
+    try:
+        output_xml = do_process(file_path)
+        data = drawio_serialization.encode_diagram_data(output_xml)
+        drawio_utils.write_drawio_output(data, "output.drawio")
 
-    process = subprocess.Popen([DRAWIO_EXECUTABLE_PATH, 'output.drawio'])
-    process.wait()
+        if os.path.isfile(drawio_path):
+            try:
+                process = subprocess.Popen([drawio_path, 'output.drawio'])
+                process.wait()
+            except (FileNotFoundError, PermissionError) as e:
+                print(f"Error opening output file: {e}")
+    except XMLParseException as e:
+        print(f"Error processing file: {e}")
+    except ValueError as e:
+        print(f"Error translating file: {e}")
 
 def process_directory(directory_path):
     for root, _, files in os.walk(directory_path):

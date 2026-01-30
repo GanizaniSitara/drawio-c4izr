@@ -1,0 +1,20 @@
+# C4izr - Draw.io to C4 converter dependencies
+# Pin versions for security and reproducibility
+
+# XML processing - lxml is required for parsing draw.io files
+# Use a version with security fixes for XXE vulnerabilities
+lxml>=5.0.0
+
+# Standard library modules used (no need to install):
+# - xml.etree.ElementTree
+# - base64
+# - zlib
+# - urllib.parse
+# - argparse
+# - logging
+# - pathlib
+# - subprocess
+# - secrets
+# - string
+# - os
+# - sys
