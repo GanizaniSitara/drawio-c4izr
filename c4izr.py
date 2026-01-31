@@ -516,14 +516,29 @@ if __name__ == "__main__":
 
 
 
-    import os
-
-    import drawio_serialization, drawio_utils
+    import subprocess
+    import shutil
+    import platform
+    import drawio_serialization
+    import drawio_utils
 
     data = drawio_serialization.encode_diagram_data(output_xml)
-
     drawio_utils.write_drawio_output(data, "output.drawio")
 
-    DRAWIO_EXECUTABLE_PATH = "C:\\Program Files\\draw.io\\draw.io.exe"
+    # Use platform-independent path lookup to find draw.io executable
+    drawio_path = shutil.which("draw.io") or shutil.which("drawio")
+    if drawio_path is None:
+        # Fall back to common installation locations
+        if platform.system() == "Windows":
+            drawio_path = "C:\\Program Files\\draw.io\\draw.io.exe"
+        elif platform.system() == "Darwin":
+            drawio_path = "/Applications/draw.io.app/Contents/MacOS/draw.io"
+        else:
+            drawio_path = "/usr/bin/drawio"
 
-    os.system(f'"{DRAWIO_EXECUTABLE_PATH}" output.drawio')
+    # Use subprocess with list arguments to avoid command injection vulnerability
+    if drawio_path:
+        try:
+            subprocess.run([drawio_path, "output.drawio"], check=False)
+        except FileNotFoundError:
+            print(f"Warning: draw.io executable not found at {drawio_path}")
