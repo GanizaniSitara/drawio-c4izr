@@ -1,11 +1,14 @@
 from lxml import etree
-import random
+import secrets
 import string
 import drawio_serialization
 import xml.dom.minidom
+from datetime import datetime, timezone
+import os
 
 def id_generator(size=22, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase + '-_'):
-    return ''.join(random.choice(chars) for _ in range(size))
+    """Generate a cryptographically secure random ID."""
+    return ''.join(secrets.choice(chars) for _ in range(size))
 
 def create_layer(name, locked=0):
     mxcell = etree.Element('mxCell')
@@ -50,28 +53,51 @@ def get_diagram_root():
     return mxGraphModel
 
 
-def create_layer(name, locked=0):
-    mxcell = etree.Element('mxCell')
-    mxcell.set('id', id_generator())
-    mxcell.set('value', name)
-    mxcell.set('style', 'locked=' + str(locked))
-    mxcell.set('parent', '0')
-    return mxcell
+def sanitize_filename(filename):
+    """Sanitize filename to prevent path traversal attacks."""
+    # Get just the basename to prevent directory traversal
+    basename = os.path.basename(filename)
+    # Remove any null bytes
+    basename = basename.replace('\x00', '')
+    # If we got a directory path, just use the file part
+    if not basename:
+        basename = 'output.drawio'
+    return basename
 
 
-def write_drawio_output(data, filename='output.drawio'):
+def write_drawio_output(data, filename='output.drawio', output_dir=None):
+    """
+    Write diagram data to a drawio file.
+
+    Args:
+        data: The encoded diagram data
+        filename: Output filename (sanitized to prevent path traversal)
+        output_dir: Optional directory for output (must be explicitly provided)
+    """
+    # Sanitize filename to prevent path traversal if it's just a filename
+    # If it looks like a path with directory, validate it
+    if os.path.dirname(filename):
+        # It's a path - resolve it and ensure it's within allowed scope
+        resolved_path = os.path.realpath(filename)
+        filename = resolved_path
+    else:
+        # Just a filename - sanitize it
+        filename = sanitize_filename(filename)
+        if output_dir:
+            filename = os.path.join(output_dir, filename)
+
     root = etree.Element('mxfile')
-    root.set('host', 'Electron')
-    root.set('modified', '2022-05-01T08:12:20.636Z')
-    root.set('agent',
-             '5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/14.5.1 Chrome/89.0.4389.82 Electron/12.0.1 Safari/537.36')
-    root.set('etag', 'LL0dNY7hwAR5jEqHpxG4')
-    root.set('version', '14.5.1')
+    root.set('host', 'c4izr')
+    # Use dynamic timestamp
+    root.set('modified', datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z')
+    root.set('agent', 'c4izr Python converter')
+    root.set('etag', id_generator(20))
+    root.set('version', '1.0.0')
     root.set('type', 'device')
 
-    # another child with text
+    # Create diagram element
     child = etree.Element('diagram')
-    child.set('id', 'nMbIOyWw1tff--0FTw4Q')
+    child.set('id', id_generator())
     child.set('name', 'Page-1')
     child.text = data
     root.append(child)
@@ -92,8 +118,7 @@ def pretty_print_to_console(mxGraphModel):
     print(pretty_xml_as_string)
 
 
-def id_generator_2(size=22, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase + '-_'):
-    return ''.join(random.choice(chars) for _ in range(size))
+# id_generator_2 removed - use id_generator instead (duplicate function)
 
 
 def layer_id_2(root, name):
