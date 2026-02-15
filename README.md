@@ -93,3 +93,90 @@ export ANTHROPIC_API_KEY=dummy
 # 3. Convert your image
 python main.py lucidchart_export.png -o c4_diagram.drawio --from-image
 ```
+
+---
+
+## How Vision Conversion Works
+
+When you use the `--from-image` flag, the conversion happens in three stages:
+
+```
+┌─────────────────┐
+│  Input Image    │  (PNG/JPG from Lucidchart, screenshots, etc.)
+│  (Lucidchart)   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────────────────────────────────────────────┐
+│  Stage 1: Vision AI Analysis                            │
+│  (vision_diagram_parser.py)                             │
+│                                                          │
+│  • Claude Opus vision model analyzes the image          │
+│  • Extracts: boxes, labels, connections, positions      │
+│  • Identifies: element types (person, database, box)    │
+│  • Preserves: spatial layout and relationships          │
+│  • Output: Structured JSON data                         │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      ▼
+         ┌────────────────────────┐
+         │  Structured Data (JSON) │
+         │  {                      │
+         │    elements: [...],     │
+         │    connections: [...]   │
+         │  }                      │
+         └────────┬───────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────────────────────┐
+│  Stage 2: draw.io XML Generation                        │
+│  (png2drawio.py)                                        │
+│                                                          │
+│  • Converts JSON to draw.io mxGraphModel XML            │
+│  • Maps positions to draw.io coordinates                │
+│  • Applies appropriate shapes and styles                │
+│  • Creates mxCell elements for boxes and arrows         │
+│  • Output: Valid draw.io XML                            │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      ▼
+         ┌────────────────────────┐
+         │  draw.io XML (generic)  │
+         └────────┬───────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────────────────────┐
+│  Stage 3: C4 Standardization                            │
+│  (c4izr.py - existing converter)                        │
+│                                                          │
+│  • Applies C4 styling and conventions                   │
+│  • Adds C4 metadata (c4Name, c4Type, c4Description)     │
+│  • Distinguishes main system vs external systems        │
+│  • Standardizes box sizes (240x120)                     │
+│  • Applies C4 color scheme (blue/gray)                  │
+│  • Formats labels with C4 template                      │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      ▼
+         ┌────────────────────────┐
+         │  C4 draw.io Output      │
+         │  Ready to edit!         │
+         └─────────────────────────┘
+```
+
+### Key Components
+
+- **vision_diagram_parser.py**: Interfaces with Claude Opus vision API (via copilot-api or direct)
+- **png2drawio.py**: Transforms extracted structure into draw.io's XML format
+- **c4izr.py**: Your existing converter that applies C4 standards
+- **copilot-api**: Optional proxy that lets you use GitHub Copilot subscription instead of paying for Anthropic API
+
+### Why This Approach?
+
+1. **Leverages existing code**: Reuses your proven c4izr converter for C4 standardization
+2. **Clean separation**: Vision extraction → Generic draw.io → C4 styling
+3. **Debuggable**: Use `--save-intermediate` to see the draw.io XML before C4 conversion
+4. **Cost-effective**: Works with GitHub Copilot subscription (via copilot-api proxy)
+5. **Format agnostic**: Vision stage works with any diagram image format
+
+For detailed setup instructions, see [VISION_SETUP.md](VISION_SETUP.md).
