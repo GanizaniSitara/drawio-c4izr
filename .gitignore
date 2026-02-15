@@ -168,4 +168,8 @@ cython_debug/
 output.drawio
 c4_output/
 
+# Test output files
+test_output.drawio
+output.drawio
+
 .aider*
