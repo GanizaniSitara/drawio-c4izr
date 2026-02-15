@@ -1,0 +1,6 @@
+# Core dependencies
+lxml>=4.9.0
+
+# Vision AI dependencies (required for --from-image)
+# Install with: pip install -r requirements.txt
+anthropic>=0.39.0

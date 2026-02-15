@@ -162,5 +162,10 @@ cython_debug/
 # Drawio temp files
 *.dtmp
 *.bkp
+*_intermediate.drawio
+
+# Vision conversion outputs
+output.drawio
+c4_output/
 
 .aider*
