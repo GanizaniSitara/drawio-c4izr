@@ -8,11 +8,51 @@ import os
 import sys
 import subprocess
 import logging
+import shutil
+import platform
 from pathlib import Path
 
 from c4izr import c4izr
 import drawio_serialization
 import drawio_utils
+
+
+def get_default_drawio_path():
+    """Get the default draw.io executable path for the current platform."""
+    # First try to find it in PATH
+    drawio_path = shutil.which("draw.io") or shutil.which("drawio")
+    if drawio_path:
+        return drawio_path
+
+    # Fall back to platform-specific default locations
+    if platform.system() == "Windows":
+        return r"C:\Program Files\draw.io\draw.io.exe"
+    elif platform.system() == "Darwin":
+        return "/Applications/draw.io.app/Contents/MacOS/draw.io"
+    else:  # Linux and others
+        return "/usr/bin/drawio"
+
+
+def validate_drawio_path(path):
+    """Validate that the draw.io path is safe and exists."""
+    if not path:
+        return None
+
+    # Resolve to absolute path
+    resolved = os.path.realpath(path)
+
+    # Check if the file exists
+    if not os.path.isfile(resolved):
+        return None
+
+    # Basic validation - must be an executable
+    if not os.access(resolved, os.X_OK):
+        # On Windows, check if it's an .exe file
+        if platform.system() == "Windows" and resolved.lower().endswith('.exe'):
+            return resolved
+        return None
+
+    return resolved
 
 # Configure logging
 logger = logging.getLogger('c4izr')
@@ -50,7 +90,7 @@ def parse_arguments():
     parser.add_argument(
         "--drawio-path",
         help="Path to the draw.io executable",
-        default="C:\\Program Files\\draw.io\\draw.io.exe"
+        default=get_default_drawio_path()
     )
     parser.add_argument(
         "--open-output",
@@ -121,11 +161,19 @@ def process_image_file(image_path, output_path, args):
         logger.info(f"C4 conversion successful. Output written to {output_path}")
 
         # Open output file if requested
-        if args.open_output and os.path.exists(args.drawio_path):
-            try:
-                subprocess.Popen([args.drawio_path, output_path])
-            except Exception as e:
-                logger.error(f"Error opening file in draw.io: {str(e)}")
+        if args.open_output:
+            validated_path = validate_drawio_path(args.drawio_path)
+            if validated_path:
+                try:
+                    subprocess.Popen([validated_path, output_path])
+                except FileNotFoundError:
+                    logger.error(f"draw.io executable not found at {args.drawio_path}")
+                except PermissionError:
+                    logger.error(f"Permission denied to execute {args.drawio_path}")
+                except OSError as e:
+                    logger.error(f"Error opening file in draw.io: {str(e)}")
+            else:
+                logger.warning(f"draw.io executable not found or not valid: {args.drawio_path}")
 
         return True
 
@@ -149,7 +197,14 @@ def process_file(file_path, output_path, args):
         # Read input file
         try:
             from lxml import etree
-            tree = etree.parse(file_path)
+            # Create a secure XML parser that prevents XXE attacks
+            parser = etree.XMLParser(
+                resolve_entities=False,  # Disable entity resolution
+                no_network=True,         # Disable network access
+                dtd_validation=False,    # Disable DTD validation
+                load_dtd=False           # Don't load external DTDs
+            )
+            tree = etree.parse(file_path, parser)
             diagrams = tree.findall('.//diagram')
 
             if len(diagrams) > 1 and args.verbose:
@@ -189,11 +244,19 @@ def process_file(file_path, output_path, args):
             return False
 
         # Open output file if requested
-        if args.open_output and os.path.exists(args.drawio_path):
-            try:
-                subprocess.Popen([args.drawio_path, output_path])
-            except Exception as e:
-                logger.error(f"Error opening file in draw.io: {str(e)}")
+        if args.open_output:
+            validated_path = validate_drawio_path(args.drawio_path)
+            if validated_path:
+                try:
+                    subprocess.Popen([validated_path, output_path])
+                except FileNotFoundError:
+                    logger.error(f"draw.io executable not found at {args.drawio_path}")
+                except PermissionError:
+                    logger.error(f"Permission denied to execute {args.drawio_path}")
+                except OSError as e:
+                    logger.error(f"Error opening file in draw.io: {str(e)}")
+            else:
+                logger.warning(f"draw.io executable not found or not valid: {args.drawio_path}")
 
         return True
     except Exception as e:
@@ -208,6 +271,9 @@ def process_directory(dir_path, output_dir, args):
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
 
+    # Resolve the output directory to an absolute path for safety checks
+    output_dir_resolved = os.path.realpath(output_dir)
+
     for root, _, files in os.walk(dir_path):
         for filename in files:
             if filename.lower().endswith('.drawio'):
@@ -215,6 +281,13 @@ def process_directory(dir_path, output_dir, args):
                 # Generate output path, preserving directory structure
                 rel_path = os.path.relpath(file_path, dir_path)
                 output_path = os.path.join(output_dir, f"c4_{rel_path}")
+
+                # Security: Resolve and verify path is within output directory
+                output_path_resolved = os.path.realpath(output_path)
+                if not output_path_resolved.startswith(output_dir_resolved + os.sep):
+                    logger.error(f"Path traversal attempt detected for {filename}, skipping")
+                    failure_count += 1
+                    continue
 
                 # Ensure output directory exists
                 output_file_dir = os.path.dirname(output_path)

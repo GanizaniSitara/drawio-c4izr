@@ -1,6 +1,24 @@
-# Core dependencies
-lxml>=4.9.0
+# C4izr - Draw.io to C4 converter dependencies
+# Pin versions for security and reproducibility
 
-# Vision AI dependencies (required for --from-image)
-# Install with: pip install -r requirements.txt
+# XML processing - lxml is required for parsing draw.io files
+# Use a version with security fixes for XXE vulnerabilities
+lxml>=5.0.0
+
+# Vision AI dependencies (optional - only required for --from-image feature)
+# Install with: pip install anthropic
 anthropic>=0.39.0
+
+# Standard library modules used (no need to install):
+# - xml.etree.ElementTree
+# - base64
+# - zlib
+# - urllib.parse
+# - argparse
+# - logging
+# - pathlib
+# - subprocess
+# - secrets
+# - string
+# - os
+# - sys
