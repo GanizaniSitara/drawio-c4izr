@@ -3,9 +3,8 @@
 Convert structured diagram data (from vision analysis) to draw.io XML format.
 """
 
-import xml.etree.ElementTree as ET
 import uuid
-from typing import Dict, List
+import xml.etree.ElementTree as ET
 
 
 class DiagramToDrawIO:
@@ -22,7 +21,7 @@ class DiagramToDrawIO:
         self.canvas_width = canvas_width
         self.canvas_height = canvas_height
 
-    def convert(self, diagram_data: Dict) -> str:
+    def convert(self, diagram_data: dict) -> str:
         """
         Convert structured diagram data to draw.io XML.
 
@@ -73,7 +72,7 @@ class DiagramToDrawIO:
 
         return ET.tostring(root, encoding='unicode', method='xml')
 
-    def _add_element(self, parent: ET.Element, element: Dict) -> str:
+    def _add_element(self, parent: ET.Element, element: dict) -> str:
         """Add a diagram element (box, shape) to the XML."""
         elem_id = str(uuid.uuid4())
         elem_type = element.get("type", "box")
@@ -121,7 +120,7 @@ class DiagramToDrawIO:
 
         return elem_id
 
-    def _add_connection(self, parent: ET.Element, connection: Dict, id_map: Dict[str, str]) -> str:
+    def _add_connection(self, parent: ET.Element, connection: dict, id_map: dict[str, str]) -> str:
         """Add a connection (arrow, edge) to the XML."""
         conn_id = str(uuid.uuid4())
         label = connection.get("label", "")
@@ -221,7 +220,7 @@ def main():
     if sys.argv[1] == "-":
         diagram_data = json.load(sys.stdin)
     else:
-        with open(sys.argv[1], 'r') as f:
+        with open(sys.argv[1]) as f:
             diagram_data = json.load(f)
 
     # Convert to draw.io

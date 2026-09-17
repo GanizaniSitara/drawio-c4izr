@@ -15,11 +15,16 @@ conversion.
 ## Installation
 
 ```
-pip install -r requirements.txt
+pip install -e .
 ```
 
-`lxml` is required. `anthropic` is only needed for image input; see
-[VISION_SETUP.md](VISION_SETUP.md).
+`lxml` is the only requirement. Image input additionally needs `anthropic`:
+
+```
+pip install -e ".[vision]"
+```
+
+See [VISION_SETUP.md](VISION_SETUP.md) for the API key or proxy setup.
 
 ## Usage
 
@@ -33,6 +38,10 @@ python main.py diagrams/ -o converted/
 When a diagram contains more than one candidate system, you are asked which is the main
 one. `--non-interactive` picks the first instead.
 
+Every C4 box comes out at a uniform 240x120 regardless of its size in the source diagram —
+consistent sizing is the point of the conversion. Use the spread factor to change how far
+apart the boxes sit, not how big they are.
+
 Convert an image:
 
 ```
@@ -44,7 +53,7 @@ python main.py diagram.png -o converted.drawio --from-image
 | Option | Effect |
 |---|---|
 | `-o`, `--output` | Output file, or output directory for a directory input (default `output.drawio`) |
-| `-s`, `--scaling-factor` | Scales element sizes (default 1.4) |
+| `-s`, `--scaling-factor`, `--spread` | How far apart to push elements, relative to the diagram centre (default 1.4). This scales **spacing**, not element size |
 | `--non-interactive` | Do not prompt; use the first system found as the main system |
 | `--drawio-path` | Path to the draw.io executable |
 | `--open-output` | Open the result in draw.io when done |
@@ -68,10 +77,23 @@ through the same final step.
   produce worse results. `--save-intermediate` and `-v` show what was actually detected.
 - L0 / multi-level decomposition is not attempted; the output is a single diagram.
 
-`test_unified.py` is a smoke test covering serialisation round-tripping, a basic
-conversion and file processing. Run it with `python test_unified.py`.
+## Tests
 
-`runner.py` is an earlier entry point kept for reference. Use `main.py`.
+```
+pip install -e ".[dev]"
+python -m pytest -q
+python -m ruff check .
+python -m mypy .
+```
+
+The suite covers the conversion output element by element, the spread-versus-size
+behaviour, the serialisation round trip, and the awkward inputs — a diagram with no
+vertices, an edge with no endpoints, non-numeric geometry. Two tests exist specifically to
+stop old bugs coming back: duplicate element labels used to produce several main systems,
+and constructing the converter used to add another logging handler each time.
+
+Conversion is visual, so a green suite is not proof a change is good. Open the output in
+draw.io and look at it.
 
 ## Licence
 
