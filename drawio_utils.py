@@ -1,10 +1,13 @@
-from lxml import etree
+import os
 import secrets
 import string
-import drawio_serialization
 import xml.dom.minidom
-from datetime import datetime, timezone
-import os
+from datetime import UTC, datetime
+
+from lxml import etree
+
+import drawio_serialization
+
 
 def id_generator(size=22, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase + '-_'):
     """Generate a cryptographically secure random ID."""
@@ -89,7 +92,7 @@ def write_drawio_output(data, filename='output.drawio', output_dir=None):
     root = etree.Element('mxfile')
     root.set('host', 'c4izr')
     # Use dynamic timestamp
-    root.set('modified', datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z')
+    root.set('modified', datetime.now(UTC).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z')
     root.set('agent', 'c4izr Python converter')
     root.set('etag', id_generator(20))
     root.set('version', '1.0.0')
@@ -169,7 +172,10 @@ def resize_string_to_fit(string, initial_font_size, target_width):
         # Assuming we want to maintain a minimum legible font size (e.g., 8px)
         min_font_size = 8
         if adjusted_font_size < min_font_size:
-            print("Warning: Adjusted font size is below the minimum legible size. Consider truncating the string or increasing the target width.")
+            print(
+                "Warning: Adjusted font size is below the minimum legible size. "
+                "Consider truncating the string or increasing the target width."
+            )
             adjusted_font_size = min_font_size
 
         return adjusted_font_size, string

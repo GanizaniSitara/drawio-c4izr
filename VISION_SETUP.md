@@ -8,7 +8,7 @@ API key or a local proxy that serves the same API.
 
 ```
 export ANTHROPIC_API_KEY=sk-ant-...
-pip install -r requirements.txt
+pip install -e ".[vision]"
 ```
 
 Leave `ANTHROPIC_BASE_URL` unset.

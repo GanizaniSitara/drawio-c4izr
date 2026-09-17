@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "drawio-c4izr"
+version = "0.3.0"
+description = "Convert draw.io diagrams into a consistent C4 representation"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.12"
+dependencies = [
+    # Required: draw.io files are parsed with lxml, using a parser configured
+    # against XXE. 5.0+ for the security fixes.
+    "lxml>=5.0.0",
+]
+
+[project.optional-dependencies]
+# Only needed by --from-image, which calls a vision model.
+vision = ["anthropic>=0.39.0"]
+dev = ["pytest>=8.0", "ruff>=0.6", "mypy>=1.11", "lxml-stubs>=0.5"]
+
+[project.scripts]
+c4izr = "main:main"
+
+[tool.setuptools]
+py-modules = [
+    "c4izr",
+    "drawio_serialization",
+    "drawio_utils",
+    "main",
+    "png2drawio",
+    "vision_diagram_parser",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_ignores = false
+# The converter is the part callers depend on, so it is checked strictly. The CLI and
+# the vision modules are checked for obvious breakage only; tightening them is a
+# separate pass.
+disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = ["c4izr"]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[[tool.mypy.overrides]]
+module = ["anthropic", "anthropic.*"]
+ignore_missing_imports = true
+
+# The vision modules are thin wrappers around the Anthropic SDK, whose request and
+# response types are large unions. Typing them properly is its own piece of work; this
+# pass covers the converter. They are still linted, and a test asserts they import.
+[[tool.mypy.overrides]]
+module = ["vision_diagram_parser", "png2drawio"]
+ignore_errors = true
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+python_files = ["test_*.py"]

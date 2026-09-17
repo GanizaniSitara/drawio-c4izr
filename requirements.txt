@@ -1,24 +1,8 @@
-# C4izr - Draw.io to C4 converter dependencies
-# Pin versions for security and reproducibility
-
-# XML processing - lxml is required for parsing draw.io files
-# Use a version with security fixes for XXE vulnerabilities
-lxml>=5.0.0
-
-# Vision AI dependencies (optional - only required for --from-image feature)
-# Install with: pip install anthropic
-anthropic>=0.39.0
-
-# Standard library modules used (no need to install):
-# - xml.etree.ElementTree
-# - base64
-# - zlib
-# - urllib.parse
-# - argparse
-# - logging
-# - pathlib
-# - subprocess
-# - secrets
-# - string
-# - os
-# - sys
+# Dependencies are declared in pyproject.toml. This file is kept so that older
+# instructions still work.
+#
+#   pip install -e .              core: draw.io to C4 conversion
+#   pip install -e ".[vision]"    adds --from-image support
+#   pip install -e ".[dev]"       adds pytest, ruff, mypy
+#
+-e .
