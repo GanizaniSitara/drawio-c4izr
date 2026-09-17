@@ -2,7 +2,6 @@ import base64
 import zlib
 from urllib.parse import quote, unquote
 
-
 # functions courtesy of
 # https://stackoverflow.com/questions/46351275/using-pako-deflate-with-python
 
@@ -25,7 +24,13 @@ def js_atob(data):
     return base64.b64decode(data)
 
 def pako_deflate_raw(data):
-    compress = zlib.compressobj(zlib.Z_DEFAULT_COMPRESSION, zlib.DEFLATED, -15, memLevel=8,strategy=zlib.Z_DEFAULT_STRATEGY)
+    compress = zlib.compressobj(
+        zlib.Z_DEFAULT_COMPRESSION,
+        zlib.DEFLATED,
+        -15,
+        memLevel=8,
+        strategy=zlib.Z_DEFAULT_STRATEGY,
+    )
     compressed_data = compress.compress(data)
     compressed_data += compress.flush()
     return compressed_data

@@ -8,14 +8,14 @@ import base64
 import json
 import os
 from pathlib import Path
-from typing import Dict, List, Optional
+
 import anthropic
 
 
 class VisionDiagramParser:
     """Parse diagram images using Claude's vision capabilities."""
 
-    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None):
+    def __init__(self, api_key: str | None = None, base_url: str | None = None):
         """
         Initialize the vision parser.
 
@@ -36,7 +36,7 @@ class VisionDiagramParser:
 
         self.client = anthropic.Anthropic(**client_kwargs)
 
-    def parse_diagram(self, image_path: str, model: str = "claude-opus-4-5-20251101") -> Dict:
+    def parse_diagram(self, image_path: str, model: str = "claude-opus-4-5-20251101") -> dict:
         """
         Parse a diagram image and extract structured information.
 
@@ -158,7 +158,7 @@ Guidelines:
 
 Return ONLY the JSON, no additional text."""
 
-    def _extract_json(self, text: str) -> Dict:
+    def _extract_json(self, text: str) -> dict:
         """Extract JSON from response text (handles markdown code blocks)."""
         # Remove markdown code blocks if present
         text = text.strip()
@@ -174,7 +174,7 @@ Return ONLY the JSON, no additional text."""
         try:
             return json.loads(text)
         except json.JSONDecodeError as e:
-            raise ValueError(f"Failed to parse JSON response: {e}\nResponse: {text}")
+            raise ValueError(f"Failed to parse JSON response: {e}\nResponse: {text}") from e
 
 
 def main():
